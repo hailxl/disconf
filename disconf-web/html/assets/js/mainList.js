@@ -16,28 +16,62 @@
     }).done(
         function (data) {
             if (data.success === "true") {
-                var html = "";
+                // var html = "";
+                var html2 =" <option value='-1'>Apps</option>";
                 var result = data.page.result;
-                $
-                    .each(
-                    result,
-                    function (index, item) {
-                        html += '<li role="presentation" role="menuitem" tabindex="-1"><a rel='
-                            + item.id
-                            + ' href="#">APP: '
-                            + item.name
-                            + '</a></li>';
-                    });
-                $("#applist").html(html);
+                // $
+                //     .each(
+                //     result,
+                //     function (index, item) {
+                //         html += '<li role="presentation" role="menuitem" tabindex="-1"><a rel='
+                //             + item.id
+                //             + ' href="#">APP: '
+                //             + item.name
+                //             + '</a></li>';
+                //     });
+                // $("#applist").html(html);
+
+                $.each(result, function (index, item) {
+                    html2 +='<option value="'+
+                        item.id
+                        +'">'
+                        + item.name
+                        +'</option>'
+                });
+                $("#appList2").html(html2);
             }
         });
-    $("#applist").on('click', 'li a', function (e) {
-        appId = $(this).attr('rel');
-        $("#app_info").html(", " + $(this).text());
-        $("#appDropdownMenuTitle").text($(this).text());
+    // $("#applist").on('click', 'li a', function (e) {
+    //     appId = $(this).attr('rel');
+    //     // $("#app_info").html(", " + $(this).text());
+    //     $("#appDropdownMenuTitle").text($(this).text());
+    //     version = "#";
+    //     fetchVersion(appId, envId);
+    // });
+
+
+    // console.log("xxx", $("#applist2"));
+    // $('#applist2').change(function () {
+    //     alert('test');
+    // });
+
+    $("#appList2").on('change',function () {
+        appId = $(this).val();
+        // alert($(this).children('option:selected').text());
+        // $("#app_info").html(", " + $(this).text());
+        // $("#appDropdownMenuTitle").text($(this).children('option:selected').text());
         version = "#";
         fetchVersion(appId, envId);
     });
+    // $("#applist2").change( function () {
+    //
+    //     appId = $(this).val();
+    //     alert(appId);
+    //     $("#app_info").html(", " + $(this).text());
+    //     $("#appDropdownMenuTitle").text($(this).text());
+    //     version = "#";
+    //     fetchVersion(appId, envId);
+    // });
 
     //
     // 获取版本信息
@@ -58,7 +92,7 @@
                 var html = "";
                 var result = data.page.result;
                 $.each(result, function (index, item) {
-                    html += '<li><a href="#">' + item + '</a></li>';
+                    html += '<li><a href="#">版本： ' +item + '</a></li>';
                 });
                 $("#versionChoice").html(html);
 
@@ -76,6 +110,7 @@
             fetchMainList();
             e.stopPropagation();
         });
+
     }
 
     //
@@ -87,18 +122,39 @@
     }).done(
         function (data) {
             if (data.success === "true") {
-                var html = "";
+                // var html = "";
+                var html2 = "<option value=''-1'>Envs</option>";
                 var result = data.page.result;
+                // $.each(result, function (index, item) {
+                //     html += '<li><a rel=' + item.id + ' href="#">'
+                //         + item.name + ' 环境</a></li>';
+                // });
+                // $("#envChoice").html(html);
+
                 $.each(result, function (index, item) {
-                    html += '<li><a rel=' + item.id + ' href="#">'
-                        + item.name + ' 环境</a></li>';
+                    html2 +='<option value="'+
+                        item.id
+                        +'">'
+                        + item.name
+                        +'</option>'
                 });
-                $("#envChoice").html(html);
+                $("#envChoice2").html(html2);
             }
         });
-    $("#envChoice").on('click', 'li a', function () {
-        envId = $(this).attr('rel');
-        $("#env_info").html($(this).text());
+    // $("#envChoice").on('click', 'li a', function () {
+    //     envId = $(this).attr('rel');
+    //     $("#env_info").html($(this).text());
+    //     $("#envChoice li").removeClass("active");
+    //     $(this).parent().addClass("active");
+    //     version = "#";
+    //     fetchVersion(appId, envId);
+    // });
+
+    $("#envChoice2").on('change',function () {
+        envId = $(this).val();
+        // alert($(this).children('option:selected').text());
+        // $("#app_info").html(", " + $(this).text());
+        // $("#appDropdownMenuTitle").text($(this).children('option:selected').text());
         $("#envChoice li").removeClass("active");
         $(this).parent().addClass("active");
         version = "#";
@@ -123,6 +179,7 @@
 
         if (version == "#") {
         }
+        version = version.split("： ")[1]
 
         $("#zk_deploy").show().children().show();
 
@@ -217,10 +274,17 @@
                 + '" data-placement="left">' + item.machineSize + '台 '
                 + isRight + '</a>'
 
+            var  year = item.modifyTime.substring(0,4),
+                 month = item.modifyTime.substring(4,6),
+                 day = item.modifyTime.substring(6,8),
+                 hour = item.modifyTime.substring(8,10),
+                 minute = item.modifyTime.substring(10),
+                 modifyTime = year + "-" + month + '-' + day + " " + hour + ":" + minute;
+
             return Util.string.format(mainTpl,'', item.appId,
                 item.version, item.envId, item.envName, type, item.key,
-                item.createTime, item.modifyTime, item.value, link,
-                del_link, i + 1, downloadlink, data_fetch_url, machine_url);
+                item.createTime, modifyTime, item.value, link,
+                del_link, i + 1, downloadlink, data_fetch_url, machine_url,item.appName);
         }
     }
 

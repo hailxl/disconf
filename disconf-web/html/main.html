@@ -17,10 +17,11 @@
         <![endif]>
         <link rel="stylesheet" href="dep/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" />
         <link rel="stylesheet" type="text/css" href="assets/css/project.css" />
+
     </head>
 
     <body>
-        
+
         <div class="navbar navbar-fixed-top clearfix">
             <div class="navbar-inner zu-top">
                 <div class="container">
@@ -34,11 +35,11 @@
                         <a id="brand_url" href="/main.html" class="brand" style="margin-left:0px;padding:8px;"> <span class="zu-top-nav-link">Disconf</span> </a>
 
                         <span class="span2"> </span>
-                        <form class="navbar-form pull-left">
-                            <button class="btn btn-warning" title="GitHub" type="button" style=""  onclick="window.open('https://github.com/knightliao/disconf', '_blank');">
-                                <i class="icon-circle-arrow-up  icon-white"></i> <b>GitHub</b>
-                            </button>
-                        </form>
+                        <!--<form class="navbar-form pull-left">-->
+                            <!--<button class="btn btn-warning" title="GitHub" type="button" style=""  onclick="window.open('https://github.com/knightliao/disconf', '_blank');">-->
+                                <!--<i class="icon-circle-arrow-up  icon-white"></i> <b>GitHub</b>-->
+                            <!--</button>-->
+                        <!--</form>-->
                         
                         <ul class="nav pull-right" >
                             
@@ -92,23 +93,30 @@
     <div id="Main" style="margin-top:50px;">
         <div class="container-fluid">
             <div class="row-fluid" style="min-height:400px;">
-                <div class="sidebar span2" style="float:left;overflow:visible;">
+                <!--<div class="sidebar span2" style="float:left;overflow:visible;">-->
 
-                                                <div class="dropdown" style="margin-top:20px;width:100%">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="appDropdownMenu" data-toggle="dropdown" style="width:100%;">
-                                    <span id="appDropdownMenuTitle">Apps</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu"  id ="applist"  role="menu" aria-labelledby="appDropdownMenu"></ul>
-                            </div>
-                            
-                            <!--envroment list-->
-                            <ul id="envChoice" class="nav nav-pills nav-stacked" style="margin-top:20px;">
-                            </ul>
+                                                <!--<div class="dropdown" style="margin-top:20px;width:100%">-->
+                                <!--<button class="btn btn-default dropdown-toggle" type="button" id="appDropdownMenu" data-toggle="dropdown" style="width:100%;">-->
+                                    <!--<span id="appDropdownMenuTitle">Apps</span>-->
+                                    <!--<span class="caret"></span>-->
+                                <!--</button>-->
+                                <!--<ul class="dropdown-menu"  id ="applist"  role="menu" aria-labelledby="appDropdownMenu"></ul>-->
+                            <!--</div>-->
+                            <!---->
+                            <!--&lt;!&ndash;envroment list&ndash;&gt;-->
+                            <!--<ul id="envChoice" class="nav nav-pills nav-stacked" style="margin-top:20px;">-->
+                            <!--</ul>-->
 
-                </div>
+                <!--</div>-->
                 <div class="span10" style="float:left">
+                    <div>
+                            应用：<select id="appList2">
 
+                        </select>
+                            环境：<select id="envChoice2">
+                        </select>
+
+                    </div>
                     <div class="row-fluid">
                         <div class="contentWrap clearfix">
                             <ul id="versionChoice" class="nav nav-tabs" role="tablist"></ul>
@@ -144,9 +152,10 @@
                                    style="display:none">
                                 <thead>
                                 <tr>
-                                    <td>#</td>
-                                    <td>APP</td>
-                                    <td>KEY</td>
+                                    <!--<td>#</td>-->
+                                    <td>所属应用</td>
+                                    <td>所属环境</td>
+                                    <td>配置名称</td>
                                     <td>配置内容</td>
                                     <td>实例列表</td>
                                     <td>修改时间</td>
@@ -165,8 +174,9 @@
                 <div id="tbodyTpl" class="hide" style="width:0px;">
                     <table>
                         <tr>
-                            <td>{12}</td>
-                            <td style="max-width:100px">{1}</td>
+                            <!--<td>{12}</td>-->
+                            <td style="max-width:100px">{16}</td>
+                            <td style="max-width:100px">{4}</td>
                             <td style="max-width:100px">{6} &nbsp; {5}</td>
                             <td>{14}</td>
                             <td>{15}</td>
@@ -207,20 +217,17 @@
         <script src="assets/js/util.js"></script>
         <script src="assets/js/common.js"></script>
 
-        <script>
-        var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "//hm.baidu.com/hm.js?c4578bda90040ec19ded56112b82246f";
-          var s = document.getElementsByTagName("script")[0];
-          s.parentNode.insertBefore(hm, s);
-        })();
-        </script>
 
-
-<script src="assets/js/mainList.js"></script>
+        <script src="assets/js/mainList.js"></script>
 
         <script src="assets/js/footer.js"></script>
+        <!--<script type="text/javascript">-->
+            <!--$(document).ready(function(){-->
+                <!--$("#appList2").change(function(){-->
+                    <!--alert('123123');-->
+                <!--});-->
+            <!--});-->
+        <!--</script>-->
     
     </body>
 </html>
