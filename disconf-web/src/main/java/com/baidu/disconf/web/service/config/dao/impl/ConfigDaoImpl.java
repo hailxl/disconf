@@ -90,9 +90,15 @@ public class ConfigDaoImpl extends AbstractDao<Long, Config> implements ConfigDa
     public List<Config> getConfigList(Long appId, Long envId, String version, Boolean hasValue) {
 
         List<Match> matchs = new ArrayList<Match>();
-        matchs.add(new Match(Columns.APP_ID, appId));
-        matchs.add(new Match(Columns.ENV_ID, envId));
-        matchs.add(new Match(Columns.VERSION, version));
+        if(appId != -1) {
+            matchs.add(new Match(Columns.APP_ID, appId));
+        }
+        if(envId != -1) {
+            matchs.add(new Match(Columns.ENV_ID, envId));
+        }
+        if(!"".equals(version)) {
+            matchs.add(new Match(Columns.VERSION, version));
+        }
         matchs.add(new Match(Columns.STATUS, Constants.STATUS_NORMAL));
         if (hasValue) {
             return find(matchs, new ArrayList<Order>());
