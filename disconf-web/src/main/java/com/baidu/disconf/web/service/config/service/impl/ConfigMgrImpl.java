@@ -24,6 +24,7 @@ import com.baidu.disconf.web.common.Constants;
 import com.baidu.disconf.web.config.ApplicationPropertyConfig;
 import com.baidu.disconf.web.innerapi.zookeeper.ZooKeeperDriver;
 import com.baidu.disconf.web.service.app.bo.App;
+import com.baidu.disconf.web.service.app.dao.AppDao;
 import com.baidu.disconf.web.service.app.service.AppMgr;
 import com.baidu.disconf.web.service.config.bo.Config;
 import com.baidu.disconf.web.service.config.dao.ConfigDao;
@@ -34,6 +35,7 @@ import com.baidu.disconf.web.service.config.service.ConfigMgr;
 import com.baidu.disconf.web.service.config.vo.ConfListVo;
 import com.baidu.disconf.web.service.config.vo.MachineListVo;
 import com.baidu.disconf.web.service.env.bo.Env;
+import com.baidu.disconf.web.service.env.dao.EnvDao;
 import com.baidu.disconf.web.service.env.service.EnvMgr;
 import com.baidu.disconf.web.service.zookeeper.dto.ZkDisconfData;
 import com.baidu.disconf.web.service.zookeeper.dto.ZkDisconfData.ZkDisconfDataItem;
@@ -65,8 +67,14 @@ public class ConfigMgrImpl implements ConfigMgr {
     @Autowired
     private AppMgr appMgr;
 
+//    @Autowired
+//    private AppDao appDao;
+
     @Autowired
     private EnvMgr envMgr;
+
+//    @Autowired
+//    private EnvDao envDao;
 
     @Autowired
     private ZooKeeperDriver zooKeeperDriver;
@@ -156,18 +164,14 @@ public class ConfigMgrImpl implements ConfigMgr {
         //
         //
         //
-        final App app = appMgr.getById(confListForm.getAppId());
-        final Env env = envMgr.getById(confListForm.getEnvId());
+//        final App app = appMgr.getById(confListForm.getAppId());
+//        final Env env = envMgr.getById(confListForm.getEnvId());
 
         //
         //
         //
         final boolean myFetchZk = fetchZk;
-        Map<String, ZkDisconfData> zkDataMap = new HashMap<String, ZkDisconfData>();
-        if (myFetchZk) {
-            zkDataMap = zkDeployMgr.getZkDisconfDataMap(app.getName(), env.getName(), confListForm.getVersion());
-        }
-        final Map<String, ZkDisconfData> myzkDataMap = zkDataMap;
+
 
         //
         // 进行转换
@@ -177,28 +181,43 @@ public class ConfigMgrImpl implements ConfigMgr {
 
                     @Override
                     public ConfListVo transfer(Config input) {
+                        final App app = appMgr.getById(input.getAppId());
+                        final Env env = envMgr.getById(input.getEnvId());
 
-                        String appNameString = app.getName();
-                        String envName = env.getName();
-
-                        ZkDisconfData zkDisconfData = null;
-                        if (myzkDataMap != null && myzkDataMap.keySet().contains(input.getName())) {
-                            zkDisconfData = myzkDataMap.get(input.getName());
+                        if(app == null || env == null) {
+                           return null;
                         }
-                        ConfListVo configListVo = convert(input, appNameString, envName, zkDisconfData);
+                            String appNameString =app.getName();
+                            String envName = env.getName();
 
-                        // 列表操作不要显示值, 为了前端显示快速(只是内存里操作)
-                        if (!myFetchZk && !getErrorMessage) {
+                        Map<String, ZkDisconfData> zkDataMap = new HashMap<String, ZkDisconfData>();
+                                if (myFetchZk) {
+                                    zkDataMap = zkDeployMgr.getZkDisconfDataMap(appNameString,
+                                            envName, input.getVersion());
+                                }
+                        final Map<String, ZkDisconfData> myzkDataMap = zkDataMap;
+                            ZkDisconfData zkDisconfData = null;
+                            if (myzkDataMap != null && myzkDataMap.keySet()
+                                    .contains(input.getName())) {
+                                zkDisconfData = myzkDataMap.get(input.getName());
+                            }
+                            ConfListVo configListVo = convert(input, appNameString, envName,
+                                    zkDisconfData);
 
-                            // 列表 value 设置为 ""
-                            configListVo.setValue("");
-                            configListVo.setMachineList(new ArrayList<ZkDisconfData.ZkDisconfDataItem>());
-                        }
+                            // 列表操作不要显示值, 为了前端显示快速(只是内存里操作)
+                            if (!myFetchZk && !getErrorMessage) {
 
+                                // 列表 value 设置为 ""
+                                configListVo.setValue("");
+                                configListVo.setMachineList(
+                                        new ArrayList<ZkDisconfData.ZkDisconfDataItem>());
+                            }
+//                        }
                         return configListVo;
-                    }
-                });
 
+                    }
+
+                });
         return configListVo;
     }
 

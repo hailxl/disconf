@@ -33,7 +33,9 @@ public class ServiceUtil {
         for (ENTITIFROM entitifrom : daoPageFrom.getResult()) {
 
             ENTITYTO entityto = dataTransfer.transfer(entitifrom);
-            entitytos.add(entityto);
+            if(entityto != null) {
+                entitytos.add(entityto);
+            }
         }
 
         //

@@ -17,7 +17,7 @@
         function (data) {
             if (data.success === "true") {
                 // var html = "";
-                var html2 =" <option value='-1'>Apps</option>";
+                var html2 = " <option value='-1'>Apps</option>";
                 var result = data.page.result;
                 // $
                 //     .each(
@@ -32,11 +32,11 @@
                 // $("#applist").html(html);
 
                 $.each(result, function (index, item) {
-                    html2 +='<option value="'+
+                    html2 += '<option value="' +
                         item.id
-                        +'">'
+                        + '">'
                         + item.name
-                        +'</option>'
+                        + '</option>'
                 });
                 $("#appList2").html(html2);
             }
@@ -55,7 +55,7 @@
     //     alert('test');
     // });
 
-    $("#appList2").on('change',function () {
+    $("#appList2").on('change', function () {
         appId = $(this).val();
         // alert($(this).children('option:selected').text());
         // $("#app_info").html(", " + $(this).text());
@@ -92,7 +92,7 @@
                 var html = "";
                 var result = data.page.result;
                 $.each(result, function (index, item) {
-                    html += '<li><a href="#">版本： ' +item + '</a></li>';
+                    html += '<li><a href="#">版本： ' + item + '</a></li>';
                 });
                 $("#versionChoice").html(html);
 
@@ -123,7 +123,7 @@
         function (data) {
             if (data.success === "true") {
                 // var html = "";
-                var html2 = "<option value=''-1'>Envs</option>";
+                var html2 = "<option value='-1'>Envs</option>";
                 var result = data.page.result;
                 // $.each(result, function (index, item) {
                 //     html += '<li><a rel=' + item.id + ' href="#">'
@@ -132,11 +132,11 @@
                 // $("#envChoice").html(html);
 
                 $.each(result, function (index, item) {
-                    html2 +='<option value="'+
+                    html2 += '<option value="' +
                         item.id
-                        +'">'
+                        + '">'
                         + item.name
-                        +'</option>'
+                        + '</option>'
                 });
                 $("#envChoice2").html(html2);
             }
@@ -150,7 +150,7 @@
     //     fetchVersion(appId, envId);
     // });
 
-    $("#envChoice2").on('change',function () {
+    $("#envChoice2").on('change', function () {
         envId = $(this).val();
         // alert($(this).children('option:selected').text());
         // $("#app_info").html(", " + $(this).text());
@@ -169,44 +169,45 @@
     function fetchMainList() {
 
         // 参数不正确，清空列表
-        if (appId == -1 || envId == -1) {
-            $("#mainlist_error").text("请选择" + getTips()).show();
-            $("#accountBody").html("");
-            $("#mainlist").hide();
-            $("#zk_deploy").hide();
-            return;
-        }
+        // if (appId == -1 || envId == -1) {
+        //     $("#mainlist_error").text("请选择" + getTips()).show();
+        //     $("#accountBody").html("");
+        //     $("#mainlist").hide();
+        //     $("#zk_deploy").hide();
+        //     return;
+        // }
 
         if (version == "#") {
         }
-        version = version.split("： ")[1]
+
+        if (version.split("： ").length > 1) {
+            version = version.split("： ")[1];
+        }
 
         $("#zk_deploy").show().children().show();
 
         $("#batch_download").attr(
             'href',
-                "/api/web/config/downloadfilebatch?appId=" + appId + "&envId="
-                + envId + "&version=" + version);
+            "/api/web/config/downloadfilebatch?appId=" + appId + "&envId="
+            + envId + "&version=" + version);
 
         $("#mainlist_error").hide();
-        var parameter = ""
 
         url = "/api/web/config/list";
         if (appId == null && envId == null && version == null) {
 
         } else {
             url += "?";
-            if (appId != -1) {
+            if (appId) {
                 url += "appId=" + appId + "&";
             }
-            if (envId != -1) {
+            if (envId) {
                 url += "envId=" + envId + "&";
             }
-            if (version != "#") {
+            if (version) {
                 url += "version=" + version + "&";
             }
         }
-
         $.ajax({
             type: "GET",
             url: url
@@ -274,17 +275,17 @@
                 + '" data-placement="left">' + item.machineSize + '台 '
                 + isRight + '</a>'
 
-            var  year = item.modifyTime.substring(0,4),
-                 month = item.modifyTime.substring(4,6),
-                 day = item.modifyTime.substring(6,8),
-                 hour = item.modifyTime.substring(8,10),
-                 minute = item.modifyTime.substring(10),
-                 modifyTime = year + "-" + month + '-' + day + " " + hour + ":" + minute;
+            var year = item.modifyTime.substring(0, 4),
+                month = item.modifyTime.substring(4, 6),
+                day = item.modifyTime.substring(6, 8),
+                hour = item.modifyTime.substring(8, 10),
+                minute = item.modifyTime.substring(10),
+                modifyTime = year + "-" + month + '-' + day + " " + hour + ":" + minute;
 
-            return Util.string.format(mainTpl,'', item.appId,
+            return Util.string.format(mainTpl, '', item.appId,
                 item.version, item.envId, item.envName, type, item.key,
                 item.createTime, modifyTime, item.value, link,
-                del_link, i + 1, downloadlink, data_fetch_url, machine_url,item.appName);
+                del_link, i + 1, downloadlink, data_fetch_url, machine_url, item.appName);
         }
     }
 
