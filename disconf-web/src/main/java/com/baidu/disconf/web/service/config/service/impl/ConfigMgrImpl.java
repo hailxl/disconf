@@ -132,8 +132,14 @@ public class ConfigMgrImpl implements ConfigMgr {
         for (Config config : configList) {
 
             if (config.getType().equals(DisConfigTypeEnum.FILE.getType())) {
-
-                File file = new File(curTime, config.getName());
+                App app = appMgr.getById(config.getAppId());
+                Env env = envMgr.getById(config.getEnvId());
+                if (app == null || env == null) {
+                    continue;
+                }
+                String fileName = app.getName() + "-" + env.getName() + "-" + config.getVersion()
+                        + "-" + config.getName();
+                File file = new File(curTime, fileName);
                 try {
                     FileUtils.writeByteArrayToFile(file, config.getValue().getBytes());
                 } catch (IOException e) {

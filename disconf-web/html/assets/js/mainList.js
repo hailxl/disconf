@@ -168,15 +168,6 @@
     //
     function fetchMainList() {
 
-        // 参数不正确，清空列表
-        // if (appId == -1 || envId == -1) {
-        //     $("#mainlist_error").text("请选择" + getTips()).show();
-        //     $("#accountBody").html("");
-        //     $("#mainlist").hide();
-        //     $("#zk_deploy").hide();
-        //     return;
-        // }
-
         if (version == "#") {
         }
 
@@ -274,6 +265,8 @@
                 + ' machineinfo' + item.configId
                 + '" data-placement="left">' + item.machineSize + '台 '
                 + isRight + '</a>'
+            var deployInfo = '<a href="javascript:void(0);" class="deployInfo'
+                + item.configId + '" data-placement="left">点击获取</a>';
 
             var year = item.modifyTime.substring(0, 4),
                 month = item.modifyTime.substring(4, 6),
@@ -285,7 +278,8 @@
             return Util.string.format(mainTpl, '', item.appId,
                 item.version, item.envId, item.envName, type, item.key,
                 item.createTime, modifyTime, item.value, link,
-                del_link, i + 1, downloadlink, data_fetch_url, machine_url, item.appName);
+                del_link, i + 1, downloadlink, data_fetch_url, machine_url, item.appName,
+                deployInfo);
         }
     }
 
@@ -296,7 +290,7 @@
     function getMachineList(machinelist) {
 
         var tip;
-        if (machinelist.length == 0) {
+        if (!machinelist||machinelist.length == 0) {
             tip = "";
         } else {
             tip = '<div style="overflow-y:scroll;max-height:400px;"><table class="table-bordered"><tr><th>机器</th><th>值</th><th>状态</th></tr>';
@@ -395,6 +389,12 @@
                 fetchZkInfo(id, e);
             });
 
+            $(".deployInfo" + id).on('click', function () {
+                var e = $(this);
+                e.unbind('click');
+                fetchZkDeploy(item.appId, item.envId, item.version, e);
+            });
+
         });
 
     }
@@ -429,29 +429,22 @@
     }
 
     //
-    function fetchZkDeploy() {
+    function fetchZkDeploy(appId, envId, version, object) {
         if ($("#zk_deploy_info").is(':hidden')) {
             var cc = '';
         } else {
-            fetchZkDeployInfo();
+            fetchZkDeployInfo(appId, envId, version,object);
         }
     }
 
     //
     // 获取ZK数据信息
     //
-    function fetchZkDeployInfo() {
+    function fetchZkDeployInfo(deploy_appId, deploy_envId, deploy_version,object) {
 
-        $("#zk_deploy_info_pre").html("正在获取ZK信息，请稍等......");
 
-        // 参数不正确，清空列表
-        if (appId == -1 || envId == -1 || version == "#") {
-            $("#zk_deploy_info_pre").html("无ZK信息");
-            return;
-        }
-
-        var base_url = "/api/zoo/zkdeploy?appId=" + appId + "&envId=" + envId
-            + "&version=" + version
+        var base_url = "/api/zoo/zkdeploy?appId=" + deploy_appId + "&envId=" + deploy_envId
+            + "&version=" + deploy_version
 
         $.ajax({
             type: "GET",
@@ -459,18 +452,27 @@
         }).done(function (data) {
             if (data.success === "true") {
                 var html = data.result.hostInfo;
-                if (html == "") {
-                    $("#zk_deploy_info_pre").html("无ZK信息");
-                } else {
-                    $("#zk_deploy_info_pre").html(html);
-                }
+                var e = object;
+                e.popover({
+                    content: getDeployInfo(html),
+                    html: true
+                }).popover('show');
             }
         });
     }
 
-    $("#zk_deploy_button").on('click', function () {
-        $("#zk_deploy_info").toggle();
-        fetchZkDeploy();
-    });
+    //部署信息
+    function getDeployInfo(html){
+        var tip;
+        if (html == "") {
+            tip = "无ZK信息";
+        } else {
+            tip = '<div  style="overflow-y:scroll;max-height:400px;">'+
+                 '<pre id="zk_deploy_info_pre" style="min-height:400px">' + html +
+                '</pre></div>'
+        }
+        return tip;
+    }
+
 
 })(jQuery);
