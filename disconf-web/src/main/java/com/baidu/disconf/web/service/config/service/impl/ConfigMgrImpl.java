@@ -161,16 +161,6 @@ public class ConfigMgrImpl implements ConfigMgr {
                 .getConfigList(confListForm.getAppId(), confListForm.getEnvId(),
                         confListForm.getVersion(),
                         confListForm.getPage());
-
-        //
-        //
-        //
-        //        final App app = appMgr.getById(confListForm.getAppId());
-        //        final Env env = envMgr.getById(confListForm.getEnvId());
-
-        //
-        //
-        //
         final boolean myFetchZk = fetchZk;
 
         //
@@ -212,7 +202,6 @@ public class ConfigMgrImpl implements ConfigMgr {
                             configListVo.setMachineList(
                                     new ArrayList<ZkDisconfData.ZkDisconfDataItem>());
                         }
-                        //                        }
                         return configListVo;
 
                     }
