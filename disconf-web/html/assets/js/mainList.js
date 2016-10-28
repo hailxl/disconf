@@ -92,25 +92,13 @@
                 var html = "";
                 var result = data.page.result;
                 $.each(result, function (index, item) {
-                    html += '<li><a href="#">版本： ' + item + '</a></li>';
+                    html += '<input type="hidden" value="'+ result+'" />';
                 });
                 $("#versionChoice").html(html);
-
-                if (html != "") {
-                    $("#versionChoice li:first").addClass("active");
-                    version = $("#versionChoice li:first a").text();
-                }
+                version= result;
                 fetchMainList();
             }
         });
-        $("#versionChoice").unbind('click').on('click', 'li a', function (e) {
-            version = $(this).text();
-            $("#versionChoice li").removeClass("active");
-            $(this).parent().addClass("active");
-            fetchMainList();
-            e.stopPropagation();
-        });
-
     }
 
     //
@@ -169,10 +157,6 @@
     function fetchMainList() {
 
         if (version == "#") {
-        }
-
-        if (version.split("： ").length > 1) {
-            version = version.split("： ")[1];
         }
 
         $("#zk_deploy").show().children().show();
